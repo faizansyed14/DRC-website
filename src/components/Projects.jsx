@@ -8,6 +8,23 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+const customerProjectImages = [
+  '/images/projects/img1.jpg',
+  '/images/projects/img2.jpg',
+  '/images/projects/img3.jpeg',
+  '/images/projects/img4.jpeg',
+  '/images/projects/img5.jpeg',
+  '/images/projects/img6.jpeg',
+  '/images/projects/img7.jpeg',
+  '/images/projects/img8.jpeg',
+  '/images/projects/img9.jpeg',
+  '/images/projects/img10.jpeg',
+  '/images/projects/img11.jpeg',
+  '/images/projects/img12.jpeg',
+  '/images/projects/img13.jpeg',
+  '/images/projects/img14.jpeg',
+];
+
 const Projects = () => {
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
   const sectionRef = useRef(null);
@@ -20,31 +37,53 @@ const Projects = () => {
   const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
   const projects = [
-    { image: '/images/projects/highrise.png', title: 'Skyline Towers',      category: 'Commercial',      volume: '40,000 m³' },
-    { image: '/images/projects/bridge.png',   title: 'Metro Bridge',         category: 'Infrastructure',  volume: '25,000 m³' },
-    { image: '/images/about/plant.png',       title: 'Industrial Complex',   category: 'Industrial',      volume: '18,000 m³' },
-    { image: '/images/services/readymix.png', title: 'Luxury Residences',    category: 'Residential',     volume: '12,000 m³' },
-    { image: '/images/services/pumping.png',  title: 'Highway Expansion',    category: 'Infrastructure',  volume: '55,000 m³' },
-    { image: '/images/projects/highrise.png', title: 'Business Park',        category: 'Commercial',      volume: '30,000 m³' },
+    { image: '/images/gallery/skyline_towers.png',   title: 'Skyline Towers',      category: 'Commercial',      volume: '40,000 m³' },
+    { image: '/images/gallery/metro_bridge.jpg', title: 'Metro Bridge',   category: 'Infrastructure',  volume: '25,000 m³' },
+    { image: '/images/gallery/industrial_complex.jpg',   title: 'Industrial Complex', category: 'Industrial',   volume: '18,000 m³' },
+    { image: '/images/gallery/luxuary_residents.jpg',   title: 'Luxury Residences',    category: 'Residential',     volume: '12,000 m³' },
+    { image: '/images/gallery/highways.png',           title: 'Highway Expansion', category: 'Infrastructure',  volume: '55,000 m³' },
+    { image: '/images/gallery/business_park.jpg',    title: 'Business Park',        category: 'Commercial',      volume: '30,000 m³' },
   ];
 
   return (
     <section className="section projects-section" id="projects" ref={sectionRef}>
-      <div ref={ref}>
-        {/* Animated heading */}
+      <div className="container" ref={ref}>
         <motion.div
           className="section-header"
           style={{ x: titleX, opacity: titleOpacity }}
         >
-          <div className="section-label">Our Projects</div>
+          <div className="section-label">Portfolio</div>
           <h2 className="section-title">
-            Landmark <span className="highlight">Projects</span> We've Built
+            Our <span className="highlight">Customers</span> and Projects
           </h2>
           <p className="section-subtitle">
-            From towering skyscrapers to critical infrastructure — our concrete
-            has shaped the region's most iconic projects.
+            A glimpse of real sites where our readymix concrete supports construction
+            across commercial, residential, and infrastructure work.
           </p>
         </motion.div>
+
+        <motion.div
+          className="customer-marquee-wrap"
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <div
+            className="customer-marquee-viewport"
+            role="region"
+            aria-label="Scrolling photos from our customers' projects"
+          >
+            <div className="customer-marquee-track">
+              {[...customerProjectImages, ...customerProjectImages].map((src, i) => (
+                <div key={`${src}-${i}`} className="customer-marquee-slide">
+                  <img src={src} alt="" loading="lazy" decoding="async" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        <h3 className="projects-carousel-heading">Landmark project highlights</h3>
 
         {/* 3D Coverflow Swiper */}
         <motion.div

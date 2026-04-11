@@ -128,18 +128,303 @@
   box-shadow: 0 0 10px currentColor;
 }
 
+/* --- Gallery: Hyderabad service coverage map --- */
+.service-map-showcase {
+  position: relative;
+  margin-bottom: 56px;
+  padding: clamp(28px, 4vw, 44px);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: linear-gradient(
+    145deg,
+    var(--bg-card) 0%,
+    var(--bg-secondary) 45%,
+    rgba(26, 82, 118, 0.12) 100%
+  );
+  box-shadow: var(--shadow-lg);
+}
+
+.service-map-showcase-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(212, 172, 13, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(41, 128, 185, 0.1) 0%, transparent 50%),
+    repeating-linear-gradient(
+      -12deg,
+      transparent,
+      transparent 40px,
+      rgba(255, 255, 255, 0.02) 40px,
+      rgba(255, 255, 255, 0.02) 41px
+    );
+  pointer-events: none;
+}
+
+.service-map-showcase-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(28px, 4vw, 48px);
+  align-items: center;
+}
+
+.service-map-copy {
+  min-width: 0;
+}
+
+.service-map-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-secondary);
+  margin-bottom: 14px;
+}
+
+.service-map-eyebrow svg {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.service-map-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+  color: var(--text-primary);
+}
+
+.service-map-lede {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin-bottom: 22px;
+  max-width: 42ch;
+}
+
+.service-map-stats {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.service-map-stats li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+}
+
+.service-map-stats svg {
+  flex-shrink: 0;
+  color: var(--brand-secondary);
+  margin-top: 2px;
+}
+
+.service-map-stats strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.service-map-stats span {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  line-height: 1.35;
+}
+
+.service-map-chips-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 10px;
+}
+
+.service-zone-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.service-zone-chip {
+  font-family: var(--font-accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(212, 172, 13, 0.12);
+  color: var(--text-primary);
+  border: 1px solid rgba(212, 172, 13, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.service-zone-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand-secondary);
+  background: rgba(212, 172, 13, 0.2);
+}
+
+.service-map-visual {
+  min-width: 0;
+  perspective: 1400px;
+}
+
+.service-map-frame {
+  position: relative;
+  border-radius: var(--radius-lg);
+  padding: clamp(10px, 2vw, 16px);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.15) 100%);
+  border: 1px solid rgba(212, 172, 13, 0.35);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transform: rotateX(2deg);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.service-map-visual:hover .service-map-frame {
+  transform: rotateX(0deg) translateY(-4px);
+}
+
+.service-map-frame-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.06) 48%,
+    transparent 56%
+  );
+  pointer-events: none;
+}
+
+.service-map-corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: var(--brand-secondary);
+  border-style: solid;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.service-map-corner--tl {
+  top: 10px;
+  left: 10px;
+  border-width: 2px 0 0 2px;
+  border-radius: 4px 0 0 0;
+}
+
+.service-map-corner--br {
+  bottom: 10px;
+  right: 10px;
+  border-width: 0 2px 2px 0;
+  border-radius: 0 0 4px 0;
+}
+
+.service-map-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--radius-lg) - 6px);
+  object-fit: contain;
+  background: var(--bg-secondary);
+}
+
+.service-map-floating-tag {
+  position: absolute;
+  bottom: clamp(18px, 3vw, 28px);
+  right: clamp(18px, 3vw, 28px);
+  font-family: var(--font-accent);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  padding: 8px 14px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #5c3d2e 0%, #3d2818 100%);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.service-map-caption {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  text-align: center;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-map-frame,
+  .service-map-visual:hover .service-map-frame {
+    transform: none;
+  }
+
+  .service-zone-chip:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .service-map-showcase-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .service-map-stats {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+  }
+
+  .service-map-visual {
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-map-showcase {
+    padding: 20px 16px;
+  }
+}
 
 /* --- 3D Parallax Gallery --- */
 .parallax-gallery {
   display: flex;
   gap: 20px;
-  height: 800px;
+  min-height: 720px;
+  height: auto;
   overflow: hidden;
   margin-top: 40px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  align-items: flex-start;
 }
 
 .parallax-col {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -263,13 +548,16 @@
 
 .fleet-cards-swiper-wrapper {
   width: 100%;
-  max-width: 450px;
+  max-width: min(450px, 100%);
   margin: 0 auto;
+  min-width: 0;
 }
 
 .fleet-cards-swiper {
-  width: 320px;
+  width: min(320px, 100%);
   height: 450px;
+  max-width: 100%;
+  margin-inline: auto;
 }
 
 .fleet-card-slide {
@@ -369,10 +657,150 @@
   overflow: hidden;
 }
 
+/* Infinite horizontal marquee — customer & project photos (no 100vw — avoids mobile horizontal scroll) */
+.customer-marquee-wrap {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 56px;
+  min-width: 0;
+}
+
+.customer-marquee-viewport {
+  overflow: hidden;
+  max-width: 100%;
+  padding-block: 8px;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 4%,
+    #000 96%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 4%,
+    #000 96%,
+    transparent
+  );
+}
+
+.customer-marquee-track {
+  display: flex;
+  width: max-content;
+  max-width: none;
+  gap: 18px;
+  animation: customer-marquee-scroll 55s linear infinite;
+  will-change: transform;
+}
+
+.customer-marquee-viewport:hover .customer-marquee-track {
+  animation-play-state: paused;
+}
+
+.customer-marquee-slide {
+  flex: 0 0 auto;
+  width: clamp(240px, 28vw, 340px);
+  /* Taller box so portrait screenshots + top/bottom UI text fit without cropping */
+  height: clamp(220px, 30vw, 320px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  /* Letterboxing when image aspect differs — keeps full image visible */
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.customer-marquee-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+/* Seamless loop: two identical halves; motion is left → right (track moves toward +X) */
+@keyframes customer-marquee-scroll {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .customer-marquee-slide:nth-child(n + 15) {
+    display: none;
+  }
+
+  .customer-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 1100px;
+    margin-inline: auto;
+    row-gap: 16px;
+    transform: none;
+  }
+
+  .customer-marquee-slide {
+    width: min(280px, 42vw);
+    min-height: 200px;
+    height: auto;
+    aspect-ratio: auto;
+  }
+
+  .customer-marquee-slide img {
+    width: 100%;
+    height: auto;
+    max-height: min(70vh, 420px);
+    object-fit: contain;
+  }
+}
+
+.projects-carousel-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
 .projects-swiper {
   width: 100%;
+  max-width: 100%;
   padding-top: 50px;
   padding-bottom: 50px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.projects-section .swiper-button-prev,
+.projects-section .swiper-button-next {
+  top: 50%;
+}
+
+@media (max-width: 768px) {
+  .projects-section .swiper-button-prev {
+    left: 4px;
+  }
+
+  .projects-section .swiper-button-next {
+    right: 4px;
+  }
+
+  .projects-swiper {
+    padding-inline: 4px;
+  }
 }
 
 .project-swiper-slide {
@@ -474,12 +902,19 @@
 
 @media (max-width: 480px) {
   .project-swiper-slide {
-    width: 280px;
+    width: min(280px, calc(100vw - 48px));
     height: 400px;
   }
   .fleet-cards-swiper {
-    width: 280px;
+    width: min(280px, calc(100vw - 48px));
     height: 380px;
+  }
+
+  .customer-marquee-slide {
+    width: min(240px, calc(100vw - 80px));
+    height: auto;
+    min-height: 180px;
+    max-height: 260px;
   }
   .s3d-image {
     height: 160px;

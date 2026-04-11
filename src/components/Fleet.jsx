@@ -23,14 +23,14 @@ const Fleet = () => {
       stat: '50+', statLabel: 'Active Mixers',
     },
     {
-      image: '/images/services/pumping.png',
+      image: '/images/fleet/pump_units.png',
       title: 'Boom Pumps',
       subtitle: '60m+ vertical reach',
       features: ['High-rise placement', '360° rotation', 'Precision delivery', 'Certified operators'],
       stat: '15+', statLabel: 'Pump Units',
     },
     {
-      image: '/images/about/plant.png',
+      image: '/images/fleet/pump_locations.png',
       title: 'Batching Plants',
       subtitle: '120m³/hour output',
       features: ['Fully computerized', 'In-house lab testing', 'Multi-plant network', 'Consistent quality'],

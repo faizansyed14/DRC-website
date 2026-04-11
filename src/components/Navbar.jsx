@@ -1,18 +1,54 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { FiSun, FiMoon } from 'react-icons/fi';
+
+const MOBILE_MQ = '(max-width: 768px)';
 
 const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(MOBILE_MQ).matches
+  );
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MQ);
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) setMobileOpen(false);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen || !isMobile) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileOpen, isMobile]);
 
   const navItems = [
     { label: 'Home', href: '#home' },
@@ -30,13 +66,68 @@ const Navbar = () => {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const linkList = (
+    <>
+      {navItems.map((item, i) => (
+        <motion.li
+          key={item.label}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 * i, duration: 0.4 }}
+        >
+          <a
+            href={item.href}
+            onClick={(e) => { e.preventDefault(); scrollTo(item.href); }}
+          >
+            {item.label}
+          </a>
+        </motion.li>
+      ))}
+    </>
+  );
+
+  const mobileOverlay =
+    isMobile &&
+    mobileOpen &&
+    typeof document !== 'undefined' &&
+    createPortal(
+      <div
+        className="mobile-nav-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site navigation"
+        onClick={() => setMobileOpen(false)}
+      >
+        <ul
+          className="mobile-nav-overlay-list"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {navItems.map((item) => (
+            <li key={item.label}>
+              <a
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollTo(item.href);
+                }}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>,
+      document.body
+    );
+
   return (
     <motion.nav
-      className={`navbar ${scrolled ? 'scrolled' : ''}`}
+      className={`navbar ${scrolled ? 'scrolled' : ''} ${mobileOpen && isMobile ? 'navbar--menu-open' : ''}`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
+      {mobileOverlay}
       <div className="container">
         <a href="#home" className="nav-logo" onClick={() => scrollTo('#home')}>
           <img src="/images/logo/DRC-logo.png" alt="Deccan Readymix Group Logo" />
@@ -57,22 +148,8 @@ const Navbar = () => {
           </div>
         </a>
 
-        <ul className={`nav-links ${mobileOpen ? 'mobile-open' : ''}`}>
-          {navItems.map((item, i) => (
-            <motion.li
-              key={item.label}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * i, duration: 0.4 }}
-            >
-              <a
-                href={item.href}
-                onClick={(e) => { e.preventDefault(); scrollTo(item.href); }}
-              >
-                {item.label}
-              </a>
-            </motion.li>
-          ))}
+        <ul className="nav-links nav-links--desktop">
+          {linkList}
         </ul>
 
         <div className="nav-actions">

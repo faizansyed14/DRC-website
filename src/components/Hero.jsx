@@ -1,18 +1,10 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+
+const HERO_BG = '/images/hero/bg2.png';
 
 /* ─── Scroll-linked parallax hero with layered depth ─── */
 const Hero = () => {
-  const [bgIndex, setBgIndex] = useState(0);
-  const backgrounds = ['/images/hero/bg-dark.png', '/images/hero/bg2.png'];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBgIndex((prev) => (prev + 1) % backgrounds.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -47,18 +39,14 @@ const Hero = () => {
         className="hero-bg"
         style={{ y: springBgY, scale: bgScale }}
       >
-        <AnimatePresence>
-          <motion.img
-            key={bgIndex}
-            src={backgrounds[bgIndex]}
-            alt="Deccan Readymix Fleet"
-            initial={{ opacity: 0, scale: 1 }}
-            animate={{ opacity: 1, scale: 1.05 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: 'easeInOut' }}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        </AnimatePresence>
+        <motion.img
+          src={HERO_BG}
+          alt="Deccan Readymix Fleet"
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{ opacity: 1, scale: 1.05 }}
+          transition={{ duration: 1.2, ease: 'easeInOut' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
       </motion.div>
       <div className="hero-overlay" />
 

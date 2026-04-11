@@ -1,9 +1,53 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { FiMapPin, FiNavigation, FiTruck } from 'react-icons/fi';
+
+/**
+ * Parallax wall: all images from fleet, gallery, projects (except img1–img14), services.
+ * Omit /images/projects/img1.* … img14.* — add any new file paths here when you drop assets in public/.
+ */
+const PARALLAX_IMAGE_PATHS = [
+  '/images/fleet/pump_locations.png',
+  '/images/fleet/pump_units.png',
+  '/images/gallery/business_park.jpg',
+  '/images/gallery/highways.png',
+  '/images/gallery/industrial_complex.jpg',
+  '/images/gallery/infrastructure_works.jpg',
+  '/images/gallery/luxuary_residents.jpg',
+  '/images/gallery/map.png',
+  '/images/gallery/metro_bridge.jpg',
+  '/images/gallery/skyline_towers.png',
+  '/images/projects/industries.jpeg',
+  '/images/services/technical_consulting.png',
+];
+
+function pathToAlt(src) {
+  const file = src.split('/').pop() || '';
+  const base = file.replace(/\.[^.]+$/, '');
+  return base.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/** Round-robin into 4 columns for the parallax masonry */
+function distributeToColumns(items, columnCount = 4) {
+  const cols = Array.from({ length: columnCount }, () => []);
+  items.forEach((item, i) => {
+    cols[i % columnCount].push(item);
+  });
+  return cols;
+}
+
+/** Zones shown on /images/gallery/map.png — update if your coverage changes */
+const SERVICE_ZONES = [
+  'Gachibowli', 'Kompally', 'Patancheruvu', 'Shamshabad', 'Uppal', 'Ghatkesar',
+  'Boilaram', 'Osman Nagar', 'Rajendra Nagar', 'ORR', 'Teilapur', 'Pradeep',
+  'Marigold', 'Serenity', 'Zenith', 'Aqua', 'Zenon', 'Senergy', 'Gandi Maisamma',
+  'Kondakal',
+];
 
 const Gallery = () => {
   const [ref, inView] = useInView({ threshold: 0.05, triggerOnce: true });
+  const [mapRef, mapInView] = useInView({ threshold: 0.12, triggerOnce: true });
   const [selected, setSelected] = useState(null);
   const sectionRef = useRef(null);
 
@@ -15,23 +59,13 @@ const Gallery = () => {
   const col3Y = useTransform(scrollYProgress, [0, 1], ['0px',   '-100px']);
   const col4Y = useTransform(scrollYProgress, [0, 1], ['80px',  '-20px']);
 
-  const images = [
-    { src: '/images/hero/hero-banner.png',    alt: 'Deccan Fleet',           span: 'tall' },
-    { src: '/images/services/readymix.png',   alt: 'Concrete Pour',          span: 'normal' },
-    { src: '/images/projects/highrise.png',   alt: 'High-Rise Project',      span: 'normal' },
-    { src: '/images/services/pumping.png',    alt: 'Boom Pump in Action',    span: 'tall' },
-    { src: '/images/about/plant.png',         alt: 'Batching Plant',         span: 'normal' },
-    { src: '/images/projects/bridge.png',     alt: 'Bridge Construction',    span: 'normal' },
-    { src: '/images/services/readymix.png',   alt: 'Quality Concrete',       span: 'tall' },
-    { src: '/images/projects/highrise.png',   alt: 'Skyline Project',        span: 'normal' },
-  ];
+  const parallaxImages = PARALLAX_IMAGE_PATHS.map((src, i) => ({
+    src,
+    alt: pathToAlt(src),
+    span: i % 3 === 0 ? 'tall' : 'normal',
+  }));
 
-  const columns = [
-    [images[0], images[1]],
-    [images[2], images[3]],
-    [images[4], images[5]],
-    [images[6], images[7]],
-  ];
+  const columns = distributeToColumns(parallaxImages, 4);
   const colYs = [col1Y, col2Y, col3Y, col4Y];
 
   return (
@@ -48,8 +82,111 @@ const Gallery = () => {
             Our Work in <span className="highlight">Action</span>
           </h2>
           <p className="section-subtitle">
-            Each column moves at a different depth as you scroll — creating a living, 3D gallery wall.
+            See where we supply readymix across Hyderabad — then scroll the full wall: fleet, gallery,
+            projects, and services (excluding only the numbered img1–img14 project strips).
           </p>
+        </motion.div>
+
+        {/* Service coverage map — Hyderabad footprint */}
+        <motion.div
+          ref={mapRef}
+          className="service-map-showcase"
+          initial={{ opacity: 0, y: 36 }}
+          animate={mapInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <div className="service-map-showcase-bg" aria-hidden />
+          <div className="service-map-showcase-inner">
+            <div className="service-map-copy">
+              <motion.div
+                className="service-map-eyebrow"
+                initial={{ opacity: 0, x: -16 }}
+                animate={mapInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.1 }}
+              >
+                <FiNavigation aria-hidden />
+                <span>Service coverage</span>
+              </motion.div>
+              <motion.h3
+                className="service-map-heading"
+                initial={{ opacity: 0, y: 12 }}
+                animate={mapInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.15 }}
+              >
+                We deliver across <span className="highlight">Hyderabad</span> &amp; growth corridors
+              </motion.h3>
+              <motion.p
+                className="service-map-lede"
+                initial={{ opacity: 0 }}
+                animate={mapInView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.2 }}
+              >
+                From IT corridors to industrial belts and ORR-linked townships — our fleet reaches the
+                projects marked on this map. Every pour is tracked and timed.
+              </motion.p>
+
+              <ul className="service-map-stats" aria-label="Coverage highlights">
+                <li>
+                  <FiMapPin aria-hidden />
+                  <div>
+                    <strong>20+</strong>
+                    <span>Named delivery zones</span>
+                  </div>
+                </li>
+                <li>
+                  <FiTruck aria-hidden />
+                  <div>
+                    <strong>ORR</strong>
+                    <span>Ring-road connected routes</span>
+                  </div>
+                </li>
+                <li>
+                  <FiNavigation aria-hidden />
+                  <div>
+                    <strong>GPS</strong>
+                    <span>Live fleet tracking</span>
+                  </div>
+                </li>
+              </ul>
+
+              <p className="service-map-chips-label">Key areas we serve</p>
+              <div className="service-zone-chips" role="list">
+                {SERVICE_ZONES.map((zone, i) => (
+                  <motion.span
+                    key={zone}
+                    role="listitem"
+                    className="service-zone-chip"
+                    initial={{ opacity: 0, scale: 0.92 }}
+                    animate={mapInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ delay: 0.08 * Math.min(i, 12) + 0.25 }}
+                  >
+                    {zone}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+
+            <motion.div
+              className="service-map-visual"
+              initial={{ opacity: 0, x: 28 }}
+              animate={mapInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.85, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <div className="service-map-frame">
+                <div className="service-map-frame-shine" aria-hidden />
+                <div className="service-map-corner service-map-corner--tl" aria-hidden />
+                <div className="service-map-corner service-map-corner--br" aria-hidden />
+                <img
+                  src="/images/gallery/map.png"
+                  alt="Map of Hyderabad showing Deccan Readymix service locations including Gachibowli, Kompally, Shamshabad, ORR, and surrounding zones"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className="service-map-floating-tag">HYDERABAD</span>
+              </div>
+              <p className="service-map-caption">Gold pins = active supply corridors · Updated for our network</p>
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Parallax masonry columns */}
@@ -62,7 +199,7 @@ const Gallery = () => {
             >
               {col.map((img, ii) => (
                 <motion.div
-                  key={ii}
+                  key={`${img.src}-${ci}-${ii}`}
                   className={`parallax-item ${img.span}`}
                   initial={{ opacity: 0, scale: 0.88 }}
                   animate={inView ? { opacity: 1, scale: 1 } : {}}

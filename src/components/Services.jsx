@@ -96,8 +96,8 @@ const Services = () => {
     {
       emoji: '👷',
       title: 'Technical Consulting',
-      desc: 'On-site engineering support, mix design review, QC assistance, and technical consultation for your project.',
-      image: '/images/services/readymix.png',
+      desc: 'On-site engineering support, mix design review, QC assistance, and expert technical consultation for your project.',
+      image: '/images/services/technical_consulting.png',
       color: '#e67e22',
       tag: 'Expert Support',
     },
