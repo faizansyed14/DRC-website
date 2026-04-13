@@ -537,27 +537,80 @@
 }
 
 
-/* --- Fleet Two Col Config --- */
-.fleet-two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
+/* --- Fleet: flex row; tight vertical rhythm (no large spacer under carousel/copy) --- */
+.fleet-layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(28px, 4vw, 64px);
   margin-top: 40px;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1120px;
+  min-width: 0;
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+.fleet-carousel-col {
+  flex: 0 0 auto;
+  width: min(100%, 380px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible;
 }
 
 .fleet-cards-swiper-wrapper {
   width: 100%;
-  max-width: min(450px, 100%);
+  max-width: min(420px, 100%);
   margin: 0 auto;
-  min-width: 0;
+  padding: 8px 8px 4px;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
-.fleet-cards-swiper {
+/*
+ * Fleet cards: fixed height + global `.swiper` padding/overflow (removed from index.css) used to
+ * shrink the slide viewport and force a vertical scrollbar. Keep overflow/padding neutral here.
+ */
+#fleet .fleet-cards-swiper.swiper {
   width: min(320px, 100%);
   height: 450px;
   max-width: 100%;
   margin-inline: auto;
+  padding-bottom: 0;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Swiper core defaults `.swiper { overflow: hidden }` — cards effect expects visible; win tie-break */
+#fleet .fleet-cards-swiper.swiper.swiper-cards {
+  overflow: visible;
+}
+
+.fleet-copy-col {
+  flex: 1 1 280px;
+  min-width: 0;
+  max-width: 520px;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  overflow: visible;
+  max-height: none;
+}
+
+.fleet-copy-col h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-weight: 700;
+  margin: 0 0 8px;
+  line-height: 1.2;
+  color: var(--text-primary);
 }
 
 .fleet-card-slide {
@@ -611,12 +664,6 @@
   text-transform: uppercase;
 }
 
-.fleet-content-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
 .fleet-panel-item {
   position: relative;
   padding-left: 24px;
@@ -625,23 +672,6 @@
 
 .fleet-panel-item:hover {
   border-left-color: var(--brand-secondary);
-}
-
-.fleet-panel-number {
-  position: absolute;
-  top: -10px;
-  left: -20px;
-  font-family: var(--font-heading);
-  font-size: 3rem;
-  font-weight: 800;
-  color: var(--border-color);
-  opacity: 0.3;
-  z-index: -1;
-}
-
-.fleet-panel-item:hover .fleet-panel-number {
-  color: var(--brand-secondary);
-  opacity: 0.1;
 }
 
 .fleet-panel-sub {
@@ -882,9 +912,25 @@
 
 /* Media Queries for New Elements */
 @media (max-width: 1024px) {
-  .fleet-two-col {
-    grid-template-columns: 1fr;
+  .fleet-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding-bottom: 0;
   }
+
+  .fleet-carousel-col {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .fleet-copy-col {
+    align-self: stretch;
+    max-width: 560px;
+    width: 100%;
+    margin-inline: auto;
+  }
+
   .parallax-col:nth-child(4) {
     display: none;
   }
@@ -901,7 +947,7 @@
     width: min(280px, calc(100vw - 48px));
     height: 400px;
   }
-  .fleet-cards-swiper {
+  #fleet .fleet-cards-swiper.swiper {
     width: min(280px, calc(100vw - 48px));
     height: 380px;
   }

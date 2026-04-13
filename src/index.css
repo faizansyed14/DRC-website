@@ -1472,7 +1472,55 @@ button {
    FLEET SECTION
    ============================================ */
 .fleet-bg {
-  background: var(--bg-secondary);
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+/* Single page scroll: no nested scrollport on Fleet */
+#fleet.fleet-bg {
+  overflow-x: hidden;
+  overflow-y: visible;
+  overscroll-behavior: auto;
+}
+
+/* Translucent so fixed Three.js background reads through (was solid --bg-secondary) */
+[data-theme="dark"] .fleet-bg {
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 0%, rgba(26, 82, 118, 0.22) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(10, 15, 26, 0.78) 0%, rgba(10, 15, 26, 0.62) 45%, rgba(10, 15, 26, 0.74) 100%);
+}
+
+[data-theme="light"] .fleet-bg {
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 0%, rgba(41, 128, 185, 0.12) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.88) 0%, rgba(255, 255, 255, 0.72) 45%, rgba(241, 245, 249, 0.86) 100%);
+}
+
+/* Depth layer (no JS scroll transform — avoids jank / “stuck” scroll in Fleet) */
+.fleet-bg-parallax {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="dark"] .fleet-bg-parallax {
+  background:
+    radial-gradient(ellipse 90% 75% at 58% 42%, rgba(41, 128, 185, 0.22) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 48% at 22% 78%, rgba(212, 172, 13, 0.12) 0%, transparent 48%),
+    radial-gradient(ellipse 70% 60% at 60% 50%, rgba(26, 82, 118, 0.2) 0%, transparent 72%);
+}
+
+[data-theme="light"] .fleet-bg-parallax {
+  background:
+    radial-gradient(ellipse 90% 75% at 58% 42%, rgba(41, 128, 185, 0.16) 0%, transparent 58%),
+    radial-gradient(ellipse 48% 44% at 20% 72%, rgba(212, 172, 13, 0.1) 0%, transparent 45%),
+    radial-gradient(ellipse 70% 60% at 50% 52%, rgba(26, 82, 118, 0.06) 0%, transparent 70%);
+}
+
+.fleet-bg-inner {
+  position: relative;
+  z-index: 1;
 }
 
 .fleet-showcase {
@@ -1997,14 +2045,8 @@ button {
 
 /* ============================================
    SWIPER CUSTOM
+   (Do not target bare `.swiper` — Fleet uses a fixed-height cards stack; extra padding + overflow caused an inner scrollbar.)
    ============================================ */
-.swiper {
-  width: 100%;
-  max-width: 100%;
-  padding-bottom: 48px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
 
 .swiper-pagination-bullet {
   background: var(--text-tertiary);
