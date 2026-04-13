@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FiShield, FiClock, FiTruck, FiAward } from 'react-icons/fi';
+import { FiShield, FiClock, FiTruck, FiAward, FiCheckCircle } from 'react-icons/fi';
 
 const About = () => {
-  const [ref, inView] = useInView({ threshold: 0.15, triggerOnce: true });
+  const [ref, inView] = useInView({ threshold: 0.08, triggerOnce: true });
   const sectionRef = useRef(null);
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
@@ -17,7 +17,7 @@ const About = () => {
   const badgeRotate = useTransform(scrollYProgress, [0, 1], ['-8deg', '0deg']);
 
   const features = [
-    { icon: <FiShield />, title: 'IS Certified Quality', desc: 'All grades tested & certified' },
+    { icon: <FiShield />, title: 'ISO Certified Quality', desc: 'All grades tested & certified' },
     { icon: <FiClock  />, title: 'On-Time Delivery',     desc: 'GPS tracked fleet dispatch' },
     { icon: <FiTruck  />, title: '50+ Fleet Vehicles',   desc: 'Modern transit mixers' },
     { icon: <FiAward  />, title: '15+ Years Legacy',     desc: 'Regional market leader' },
@@ -30,8 +30,8 @@ const About = () => {
 
   return (
     <section className="section about-section" id="about" ref={sectionRef}>
-      <div className="container">
-        <motion.div className="about-grid" ref={ref}>
+      <div className="container" ref={ref}>
+        <motion.div className="about-grid">
 
           {/* ── Image Column with scroll parallax ── */}
           <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 'var(--radius-lg)' }}>
@@ -120,6 +120,75 @@ const About = () => {
               ))}
             </motion.div>
           </motion.div>
+        </motion.div>
+
+        {/* ISO 9001:2015 — text only, two balanced columns */}
+        <motion.div
+          className="about-cert-panel"
+          initial={{ opacity: 0, y: 36 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.15, duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <div className="about-cert-panel-header">
+            <div className="section-label">Quality assurance</div>
+            <h3 className="about-cert-main-title">
+              ISO <span className="highlight">9001:2015</span> certificate of registration
+            </h3>
+          </div>
+          <div className="about-cert-panel-inner about-cert-panel-inner--text">
+            <div className="about-cert-column about-cert-column--left">
+              <div className="about-cert-column-icon" aria-hidden>
+                <FiAward />
+              </div>
+              <p className="about-cert-lead">
+                <strong>APTS Quality Certifications</strong> certifies that our quality management system
+                conforms to <strong>ISO 9001:2015</strong>, issued in line with ISO/IEC 17021 requirements
+                for certification bodies.
+              </p>
+              <p className="about-cert-body">
+                <span className="about-cert-kicker">Registered organisation</span>
+                <strong className="about-cert-entity">Shree Deccan Readymix Concrete Pvt Ltd</strong>
+              </p>
+              <p className="about-cert-address">
+                SY No. 60–61A, Mallapur Kandukuru, Balapur Mandal, Hyderabad, Ranga Reddy,
+                Telangana — 500005.
+              </p>
+            </div>
+            <div className="about-cert-column about-cert-column--right">
+              <div className="about-cert-column-icon about-cert-column-icon--accent" aria-hidden>
+                <FiCheckCircle />
+              </div>
+              <p className="about-cert-scope-line">
+                <strong>Certified scope</strong> — manufacture and sale of ready-mix concrete.
+              </p>
+              <ul className="about-cert-meta-list">
+                <li>
+                  <span>Certificate number</span>
+                  <strong>APTS QMS 919</strong>
+                </li>
+                <li>
+                  <span>Initial registration</span>
+                  <strong>20 April 2023</strong>
+                </li>
+                <li>
+                  <span>Registration valid through</span>
+                  <strong>19 April 2027</strong>
+                </li>
+                <li>
+                  <span>Recertification due</span>
+                  <strong>19 April 2029</strong>
+                </li>
+                <li>
+                  <span>Accreditation</span>
+                  <strong>SACASP</strong> — Standards Accreditation Council for Assessment Services Providers
+                </li>
+              </ul>
+              <p className="about-cert-footnote">
+                Verify accreditation at <span className="about-cert-mono">sacasp.org</span> — issuer{' '}
+                <span className="about-cert-mono">aptsquality.com</span>.
+              </p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

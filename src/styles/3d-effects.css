@@ -696,10 +696,6 @@
   will-change: transform;
 }
 
-.customer-marquee-viewport:hover .customer-marquee-track {
-  animation-play-state: paused;
-}
-
 .customer-marquee-slide {
   flex: 0 0 auto;
   width: clamp(240px, 28vw, 340px);

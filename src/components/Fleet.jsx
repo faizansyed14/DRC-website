@@ -16,7 +16,7 @@ const Fleet = () => {
 
   const slides = [
     {
-      image: '/images/services/readymix.png',
+      image: '/images/gallery/business_park.jpg',
       title: 'Transit Mixers',
       subtitle: '6m³ – 12m³ capacity',
       features: ['GPS tracked real-time', 'Automated water system', 'Fresh on-site delivery', 'Multiple capacities'],
@@ -37,7 +37,7 @@ const Fleet = () => {
       stat: '5+', statLabel: 'Plant Locations',
     },
     {
-      image: '/images/projects/highrise.png',
+      image: '/images/gallery/highways.png',
       title: 'Support Fleet',
       subtitle: 'Full logistics backbone',
       features: ['Water tankers', 'Maintenance vehicles', 'Lab mobile units', 'On-call engineers'],

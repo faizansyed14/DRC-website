@@ -1,11 +1,11 @@
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import { useTheme } from '../context/ThemeContext';
 
-const InteractiveSwarm = ({ isDark, mouseRef }) => {
-  const count = 6000;
+const InteractiveSwarm = ({ isDark, mouseRef, particleCount }) => {
+  const count = particleCount;
   const meshRef = useRef();
 
   // Create initial particle field - shaped like a galaxy/wave
@@ -106,10 +106,23 @@ const InteractiveSwarm = ({ isDark, mouseRef }) => {
 
 const ThreeDBackground = () => {
   const { isDark } = useTheme();
-  
+  const [particleCount, setParticleCount] = useState(4800);
+  const [dpr, setDpr] = useState([1, 1.25]);
+
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => {
+      setParticleCount(reduce.matches ? 900 : 4800);
+      setDpr(reduce.matches ? [1, 1] : [1, 1.25]);
+    };
+    apply();
+    reduce.addEventListener('change', apply);
+    return () => reduce.removeEventListener('change', apply);
+  }, []);
+
   // Track global mouse position so the canvas can remain pointerEvents: 'none'
   // ensuring users can still click the website!
-  const mouseRef = useRef({ x: -100, y: -100 }); 
+  const mouseRef = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -133,10 +146,10 @@ const ThreeDBackground = () => {
       <Canvas
         style={{ pointerEvents: 'none' }}
         camera={{ position: [0, 0, 15], fov: 60 }}
-        dpr={[1, 1.5]}
-        gl={{ antialias: false, alpha: true }}
+        dpr={dpr}
+        gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       >
-        <InteractiveSwarm isDark={isDark} mouseRef={mouseRef} />
+        <InteractiveSwarm isDark={isDark} mouseRef={mouseRef} particleCount={particleCount} />
       </Canvas>
     </div>
   );

@@ -13,7 +13,6 @@ const customerProjectImages = [
   '/images/projects/img2.jpg',
   '/images/projects/img3.jpeg',
   '/images/projects/img4.jpeg',
-  '/images/projects/img5.jpeg',
   '/images/projects/img6.jpeg',
   '/images/projects/img7.jpeg',
   '/images/projects/img8.jpeg',

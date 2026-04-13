@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiMapPin, FiNavigation, FiTruck } from 'react-icons/fi';
+import { useMatchMedia } from '../hooks/useMatchMedia';
 
 /**
  * Parallax wall: all images from fleet, gallery, projects (except img1–img14), services.
@@ -50,26 +51,36 @@ const Gallery = () => {
   const [mapRef, mapInView] = useInView({ threshold: 0.12, triggerOnce: true });
   const [selected, setSelected] = useState(null);
   const sectionRef = useRef(null);
+  const reducedMotion = useMatchMedia('(prefers-reduced-motion: reduce)');
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
 
-  // Different parallax speeds for each column — creates 3D depth illusion
-  const col1Y = useTransform(scrollYProgress, [0, 1], ['0px',   '-80px']);
-  const col2Y = useTransform(scrollYProgress, [0, 1], ['60px',  '-40px']);
-  const col3Y = useTransform(scrollYProgress, [0, 1], ['0px',   '-100px']);
-  const col4Y = useTransform(scrollYProgress, [0, 1], ['80px',  '-20px']);
+  const col1Y = useTransform(scrollYProgress, [0, 1], ['0px', '-80px']);
+  const col2Y = useTransform(scrollYProgress, [0, 1], ['60px', '-40px']);
+  const col3Y = useTransform(scrollYProgress, [0, 1], ['0px', '-100px']);
+  const col4Y = useTransform(scrollYProgress, [0, 1], ['80px', '-20px']);
 
-  const parallaxImages = PARALLAX_IMAGE_PATHS.map((src, i) => ({
-    src,
-    alt: pathToAlt(src),
-    span: i % 3 === 0 ? 'tall' : 'normal',
-  }));
+  const parallaxImages = useMemo(() => {
+    const paths = reducedMotion ? PARALLAX_IMAGE_PATHS.slice(0, 8) : PARALLAX_IMAGE_PATHS;
+    return paths.map((src, i) => ({
+      src,
+      alt: pathToAlt(src),
+      span: reducedMotion ? 'normal' : (i % 3 === 0 ? 'tall' : 'normal'),
+    }));
+  }, [reducedMotion]);
 
-  const columns = distributeToColumns(parallaxImages, 4);
+  const columnCount = reducedMotion ? 2 : 4;
+  const columns = useMemo(
+    () => distributeToColumns(parallaxImages, columnCount),
+    [parallaxImages, columnCount]
+  );
   const colYs = [col1Y, col2Y, col3Y, col4Y];
 
   return (
-    <section className="section" id="gallery" ref={sectionRef}>
+    <section className={`section gallery-section ${reducedMotion ? 'gallery-section--reduced-motion' : ''}`} id="gallery" ref={sectionRef}>
       <div className="container" ref={ref}>
         <motion.div
           className="section-header"
@@ -195,19 +206,25 @@ const Gallery = () => {
             <motion.div
               key={ci}
               className="parallax-col"
-              style={{ y: colYs[ci] }}
+              style={reducedMotion ? undefined : { y: colYs[Math.min(ci, 3)] }}
             >
               {col.map((img, ii) => (
                 <motion.div
                   key={`${img.src}-${ci}-${ii}`}
                   className={`parallax-item ${img.span}`}
-                  initial={{ opacity: 0, scale: 0.88 }}
+                  initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.96 }}
                   animate={inView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.7, delay: ci * 0.1 + ii * 0.15 }}
-                  whileHover={{ scale: 1.03, zIndex: 10 }}
+                  transition={{ duration: reducedMotion ? 0.35 : 0.7, delay: reducedMotion ? 0 : ci * 0.1 + ii * 0.15 }}
+                  whileHover={reducedMotion ? undefined : { scale: 1.03, zIndex: 10 }}
                   onClick={() => setSelected(img)}
                 >
-                  <img src={img.src} alt={img.alt} />
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
+                  />
                   <div className="parallax-item-overlay">
                     <span>🔍</span>
                     <p>{img.alt}</p>
@@ -235,7 +252,7 @@ const Gallery = () => {
             transition={{ type: 'spring', stiffness: 280, damping: 24 }}
             onClick={e => e.stopPropagation()}
           >
-            <img src={selected.src} alt={selected.alt} />
+            <img src={selected.src} alt={selected.alt} decoding="async" />
             <div className="lightbox-caption">{selected.alt}</div>
             <button className="lightbox-close" onClick={() => setSelected(null)}>✕</button>
           </motion.div>
