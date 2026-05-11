@@ -140,6 +140,15 @@ const Hero = () => {
             </h1>
           )}
 
+          <motion.p
+            className="hero-description"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: reducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
+          >
+            Deccan Readymix Group. Premium ready-mix concrete supply across Hyderabad.
+          </motion.p>
+
 
 
           {/* Buttons */}
